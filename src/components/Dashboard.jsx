@@ -3,6 +3,7 @@ import Card from "@mui/material/Card";
 
 import CardContent from "@mui/material/CardContent";
 import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAlt";
+import PieChartIcon from "@mui/icons-material/PieChart";
 import Datepicker from "react-tailwindcss-datepicker";
 import data from "../data/data.js";
 
@@ -46,7 +47,6 @@ function Dashboard() {
 
   const [totalClicks, setTotalClicks] = useState(0);
   const [totalImpressions, setTotalImpressions] = useState(0);
-  const chart = useRef();
   const [chartData, setDataChart] = useState({
     labels: [],
     datasets: [
@@ -91,7 +91,8 @@ function Dashboard() {
 
     setSelected(true);
     setDataChart(chartData);
-    setTotalClicks(clicks);
+    setTotalClicks((Math.round(clicks * 100) / 100).toFixed(2));
+
     setTotalImpressions(impressions);
   };
 
@@ -106,29 +107,25 @@ function Dashboard() {
             <Card sx={{ maxWidth: 275 }}>
               <CardContent>
                 <SignalCellularAltIcon /> Total Clicks
-                <div>{totalClicks}</div>
+                <div className='text-2xl font-bold'>{totalClicks}</div>
               </CardContent>
             </Card>
           </div>
           <div className='mx-5 min-w-[300px]'>
             <Card sx={{ maxWidth: 275 }}>
               <CardContent>
-                <SignalCellularAltIcon /> Total Impressions
-                <div>{totalImpressions}</div>
+                <PieChartIcon /> Total Impressions
+                <div className='text-2xl font-bold'>{totalImpressions}</div>
               </CardContent>
             </Card>
           </div>
         </div>
-
-        <div>
-          <div>Product Trends by Month</div>
-
-          <div>
-            {selected && (
-              <Line ref={chart} options={options} data={chartData} />
-            )}
-          </div>
-        </div>
+        {selected && (
+          <>
+            <div>Product Trends by Month</div>
+            <Line options={options} data={chartData} />
+          </>
+        )}
       </div>
     </div>
   );
